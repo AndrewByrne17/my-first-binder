@@ -1,0 +1,7 @@
+With wget: https://github.com/binder-examples/getting-data
+With quilt: https://github.com/binder-examples/data-quilt
+From remote storage: https://github.com/binder-examples/remote_storage
+Advanced usage patterns:
+
+Separating content from environment with nbgitpuller to reduced rebuilds:
+https://discourse.jupyter.org/t/tip-speed-up-binder-launches-by-pulling-github-content-in-a-binder-link-with-nbgitpuller/922
