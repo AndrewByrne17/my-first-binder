@@ -1,0 +1,113 @@
+pip install pandas matplotlib seaborn scipy
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+import scipy
+from scipy.stats import linregress
+
+# Data input and cleaning
+data = {
+    'Company': ['Cargill', 'Lumens', 'JPM', 'Verizon'],
+    'Amount A': [10000, 2600000, 3500000, 2600000],
+    'Amount B': [5200, 153000, 787000, 88000]
+}
+df = pd.DataFrame(data)
+
+sns.set(style="whitegrid")
+fig, ax = plt.subplots(figsize=(10, 6))
+
+# X and extended X for regression/forecast
+x = np.arange(len(df))
+x_forecast = np.append(x, x[-1]+1)  # Add one point for forecast
+companies_extended = df['Company'].tolist() + ['Forecast']
+
+# Regression & forecast for Amount A
+slope_a, intercept_a, _, _, _ = linregress(x, df['Amount A'])
+amount_a_reg = intercept_a + slope_a * x_forecast
+a_lower = amount_a_reg * 0.9
+a_upper = amount_a_reg * 1.1
+
+# Regression & forecast for Amount B
+slope_b, intercept_b, _, _, _ = linregress(x, df['Amount B'])
+amount_b_reg = intercept_b + slope_b * x_forecast
+b_lower = amount_b_reg * 0.9
+b_upper = amount_b_reg * 1.1
+
+# --- Plotting ---
+
+# Amount A: Line and scatter
+ax.plot(df['Company'], df['Amount A'], marker='o', color='royalblue', label='Amount A')
+ax.scatter(df['Company'], df['Amount A'], color='royalblue')
+# Amount A regression and forecast area
+ax.plot(companies_extended, amount_a_reg, '--', color='royalblue', alpha=0.5, label='Amount A Regression')
+ax.fill_between(companies_extended, a_lower, a_upper, color='pink', alpha=0.18, label='A Regression Forecast Area')
+
+# Amount B: Line and scatter
+ax.plot(df['Company'], df['Amount B'], marker='o', color='seagreen', label='Amount B')
+ax.scatter(df['Company'], df['Amount B'], color='seagreen')
+# Amount B regression and forecast area
+ax.plot(companies_extended, amount_b_reg, '--', color='seagreen', alpha=0.5, label='Amount B Regression')
+ax.fill_between(companies_extended, b_lower, b_upper, color='pink', alpha=0.18, label='B Regression Forecast Area')
+
+# Formatting
+plt.title('Amounts by Company with Regression Forecast Areas')
+plt.xlabel('Company')
+plt.ylabel('Amount (USD)')
+handles, labels = ax.get_legend_handles_labels()
+by_label = dict(zip(labels, handles))  # Remove duplicate pink legend
+plt.legend(by_label.values(), by_label.keys())
+plt.tight_layout()
+plt.show()
+
+
+
+
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Data
+companies = ["Cargill", "Lumens", "JPM", "Verizon"]
+amount_a = np.array([10000, 2600000, 3500000, 2600000])
+amount_b = np.array([5200, 153000, 787000, 88000])
+
+# Numeric x positions
+x = np.arange(len(companies))
+
+# Linear regression using numpy (polyfit degree 1)
+reg_a = np.polyfit(x, amount_a, 1)
+reg_b = np.polyfit(x, amount_b, 1)
+
+# Regression line values
+reg_line_a = np.polyval(reg_a, x)
+reg_line_b = np.polyval(reg_b, x)
+
+plt.figure(figsize=(10,6))
+
+# Scatter plots
+plt.scatter(x, amount_a, color='blue', label='Amount A (Scatter)', s=80, marker='o')
+plt.scatter(x, amount_b, color='green', label='Amount B (Scatter)', s=80, marker='x')
+
+# Line plots
+plt.plot(x, amount_a, color='blue', linestyle='--', label='Amount A (Line)')
+plt.plot(x, amount_b, color='green', linestyle='-', label='Amount B (Line)')
+
+# Regression lines
+plt.plot(x, reg_line_a, color='red', linewidth=2, label='Regression A')
+plt.plot(x, reg_line_b, color='magenta', linewidth=2, label='Regression B')
+
+# Fill area between regression lines
+plt.fill_between(x, reg_line_a, reg_line_b, color='pink', alpha=0.3, label='Trend Region')
+
+# X ticks as company names
+plt.xticks(x, companies)
+
+plt.ylabel("Amount (USD)")
+plt.xlabel("Company")
+plt.title("Amounts by Company with Regression and Trend Region")
+plt.legend()
+plt.tight_layout()
+plt.grid(True, linestyle='--', alpha=0.5)
+plt.show()
