@@ -1,0 +1,181 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Your data
+predicted = np.array([
+    19.04148737, 16.02002458, 13.74669128, 17.48522366, 15.95365012, 18.03584101,
+    18.3759377, 16.32156146, 19.09809265, 13.16433721, 16.28445646, 18.62272534,
+    15.88026871, 13.7172237, 16.06523382, 17.96628316, 14.33630386, 9.70288052,
+    7.793658587, 13.90788649, 11.02825322, 3.81100057, 15.36879507, 8.935643691,
+    2.812139395, 13.16084608, 10.96590365, 15.01397821, 15.62784146, 16.66662277,
+    15.73115283
+])
+residuals = np.array([
+    -1.375829213, -1.723216289, 0.772323141, 0.600212757, 2.79226856, -0.564490852,
+    0.687286016, 2.430492826, -1.41240244, -2.429463429, -1.724306497, -1.618056169,
+    1.708485425, 2.678958133, 0.810826806, -0.730034062, -0.069191418, 0.321540656,
+    -0.582840134, 1.40164282, -1.481512039, 0.208979577, 0.101921097, -1.037232599,
+    0.568855279, -2.723412259, -0.870721933, 1.820395041, 0.793908036, -0.552415069,
+    1.197028231
+])
+
+plt.figure(figsize=(10,6))
+
+# Scatter plot: Predicted vs. Residuals
+plt.scatter(predicted, residuals, c='blue', label='Residuals', s=60)
+
+# Regression (trend) line for residuals as a function of predicted
+coeffs = np.polyfit(predicted, residuals, 1)  # Linear regression
+reg_line = np.polyval(coeffs, predicted)
+# Sort for plotting lines
+sorted_idx = np.argsort(predicted)
+plt.plot(predicted[sorted_idx], reg_line[sorted_idx], color='red', label='Regression Line', linewidth=2)
+
+# Pink area (±1 std of residuals) as a simple uncertainty/trend region
+std_resid = np.std(residuals)
+upper = reg_line + std_resid
+lower = reg_line - std_resid
+plt.fill_between(predicted[sorted_idx], lower[sorted_idx], upper[sorted_idx], color='pink', alpha=0.3, label='Trend Region (±1σ)')
+
+plt.xlabel('Predicted')
+plt.ylabel('Residuals')
+plt.title('Predicted vs. Residuals with Regression and Trend Region')
+plt.legend()
+plt.grid(True, linestyle='--', alpha=0.6)
+plt.tight_layout()
+plt.show()
+
+
+
+
+
+
+
+
+
+# Predicted Residuals 19.04148737 -1.375829213 16.02002458 -1.723216289 13.74669128 0.772323141 17.48522366 0.600212757 15.95365012 2.79226856 18.03584101 -0.564490852 18.3759377 0.687286016 16.32156146 2.430492826 19.09809265 -1.41240244 13.16433721 -2.429463429 16.28445646 -1.724306497 18.62272534 -1.618056169 15.88026871 1.708485425 13.7172237 2.678958133 16.06523382 0.810826806 17.96628316 -0.730034062 14.33630386 -0.069191418 9.70288052 0.321540656 7.793658587 -0.582840134 13.90788649 1.40164282 11.02825322 -1.481512039 3.81100057 0.208979577 15.36879507 0.101921097 8.935643691 -1.037232599 2.812139395 0.568855279 13.16084608 -2.723412259 10.96590365 -0.870721933 15.01397821 1.820395041 15.62784146 0.793908036 16.66662277 -0.552415069 15.73115283 1.197028231 I need this data plotted on a scatter plot. I need to show predicted vs residuals. I need to plot via matplotlib using python. I would like to see changes over time. I need to forecast the regression using a pink area to check for trends in predicted data. I need the area to follow the plots in a downward slope. I also need the lines on the graph colored differently. I will present the data. Please do not use scipy.
+
+
+
+
+
+
+
+
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Data parsing
+data = [
+    19.04148737, -1.375829213, 16.02002458, -1.723216289, 13.74669128, 0.772323141,
+    17.48522366, 0.600212757, 15.95365012, 2.79226856, 18.03584101, -0.564490852,
+    18.3759377, 0.687286016, 16.32156146, 2.430492826, 19.09809265, -1.41240244,
+    13.16433721, -2.429463429, 16.28445646, -1.724306497, 18.62272534, -1.618056169,
+    15.88026871, 1.708485425, 13.7172237, 2.678958133, 16.06523382, 0.810826806,
+    17.96628316, -0.730034062, 14.33630386, -0.069191418, 9.70288052, 0.321540656,
+    7.793658587, -0.582840134, 13.90788649, 1.40164282, 11.02825322, -1.481512039,
+    3.81100057, 0.208979577, 15.36879507, 0.101921097, 8.935643691, -1.037232599,
+    2.812139395, 0.568855279, 13.16084608, -2.723412259, 10.96590365, -0.870721933,
+    15.01397821, 1.820395041, 15.62784146, 0.793908036, 16.66662277, -0.552415069,
+    15.73115283, 1.197028231
+]
+
+predicted = np.array(data[::2])
+residuals = np.array(data[1::2])
+time_index = np.arange(len(predicted))
+
+plt.figure(figsize=(12, 7))
+
+# 1. Scatter: Predicted vs. Residuals
+plt.scatter(predicted, residuals, color='blue', label='Predicted vs Residuals', s=70, zorder=3)
+
+# 2. Regression: Predicted vs Residuals
+reg_coeffs = np.polyfit(predicted, residuals, 1)
+reg_x = np.linspace(predicted.min(), predicted.max(), 200)
+reg_y = np.polyval(reg_coeffs, reg_x)
+
+plt.plot(reg_x, reg_y, color='red', linewidth=2, label='Regression (Predicted~Residuals)', zorder=4)
+
+# 3. Pink area: ±1 std from regression line, following the downward slope
+std_dev = np.std(residuals)
+plt.fill_between(reg_x, reg_y - std_dev, reg_y + std_dev, color='pink', alpha=0.3, label='Trend Region (±1σ)', zorder=1)
+
+# 4. Line: Residuals over time (by index)
+plt.plot(time_index, residuals, color='green', label='Residuals Over Time', linewidth=2, linestyle='dashed', marker='o', zorder=2)
+
+plt.xlabel('Predicted')
+plt.ylabel('Residuals')
+plt.title('Predicted vs Residuals with Regression Trend, Trend Region, and Residuals Over Time')
+plt.legend()
+plt.grid(True, linestyle='--', alpha=0.6)
+plt.tight_layout()
+plt.show()
+
+
+
+
+
+
+
+
+
+# Metric Trend 19.04148737 -1.375829213 16.02002458 -1.723216289 13.74669128 0.772323141 17.48522366 0.600212757 15.95365012 2.79226856 18.03584101 -0.564490852 18.3759377 0.687286016 16.32156146 2.430492826 19.09809265 -1.41240244 13.16433721 -2.429463429 16.28445646 -1.724306497 18.62272534 -1.618056169 15.88026871 1.708485425 13.7172237 2.678958133 16.06523382 0.810826806 17.96628316 -0.730034062 14.33630386 -0.069191418 9.70288052 0.321540656 7.793658587 -0.582840134 13.90788649 1.40164282 11.02825322 -1.481512039 3.81100057 0.208979577 15.36879507 0.101921097 8.935643691 -1.037232599 2.812139395 0.568855279 13.16084608 -2.723412259 10.96590365 -0.870721933 15.01397821 1.820395041 15.62784146 0.793908036 16.66662277 -0.552415069 15.73115283 1.197028231 I need this data plotted on a scatter plot. I need to show metric vs trend. I need to plot via matplotlib using python. I need to graph the data using a pink area to check for the trend. I need the pink trend area to follow the negative plots in a negative slope in a cone shape from left to right. I also need the lines on the graph colored differently. I will present the data. Please do not use scipy.
+
+
+
+
+
+
+
+
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Data
+data = [
+    19.04148737, -1.375829213, 16.02002458, -1.723216289, 13.74669128, 0.772323141,
+    17.48522366, 0.600212757, 15.95365012, 2.79226856, 18.03584101, -0.564490852,
+    18.3759377, 0.687286016, 16.32156146, 2.430492826, 19.09809265, -1.41240244,
+    13.16433721, -2.429463429, 16.28445646, -1.724306497, 18.62272534, -1.618056169,
+    15.88026871, 1.708485425, 13.7172237, 2.678958133, 16.06523382, 0.810826806,
+    17.96628316, -0.730034062, 14.33630386, -0.069191418, 9.70288052, 0.321540656,
+    7.793658587, -0.582840134, 13.90788649, 1.40164282, 11.02825322, -1.481512039,
+    3.81100057, 0.208979577, 15.36879507, 0.101921097, 8.935643691, -1.037232599,
+    2.812139395, 0.568855279, 13.16084608, -2.723412259, 10.96590365, -0.870721933,
+    15.01397821, 1.820395041, 15.62784146, 0.793908036, 16.66662277, -0.552415069,
+    15.73115283, 1.197028231
+]
+metric = np.array(data[::2])
+trend = np.array(data[1::2])
+
+# Linear regression fit
+coeffs = np.polyfit(metric, trend, 1)
+reg_x = np.linspace(metric.min(), metric.max(), 200)
+reg_y = np.polyval(coeffs, reg_x)
+
+# Cone-shaped pink area: widens as x increases
+# We'll use a factor proportional to (reg_x - reg_x.min())
+factor = (reg_x - reg_x.min()) / (reg_x.max() - reg_x.min())
+base_std = np.std(trend)
+cone_width = base_std * (1 + 2 * factor)  # Widens to 3x at the right end
+
+plt.figure(figsize=(11,7))
+
+# Pink cone-shaped region
+plt.fill_between(reg_x, reg_y - cone_width, reg_y + cone_width, color='pink', alpha=0.4, label='Trend Cone')
+
+# Regression line
+plt.plot(reg_x, reg_y, color='red', linewidth=2, label='Regression Line')
+
+# Scatter plot
+plt.scatter(metric, trend, color='blue', s=70, label='Metric vs Trend', zorder=3)
+
+plt.xlabel('Metric')
+plt.ylabel('Trend')
+plt.title('Metric vs Trend with Downward-Sloping Cone-Shaped Trend Area')
+plt.legend()
+plt.grid(True, linestyle='--', alpha=0.6)
+plt.tight_layout()
+plt.show()
