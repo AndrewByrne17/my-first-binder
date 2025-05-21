@@ -1,7 +1,5 @@
 numpy==1.25.0
 pandas
 matplotlib
-matplotlib.pyplot
 seaborn
 scipy
-scipy.stats
