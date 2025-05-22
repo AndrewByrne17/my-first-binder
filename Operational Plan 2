@@ -1,0 +1,63 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Data
+data = [
+    0, 0, 1, -1, -2, -4, 3, -9, 4, -16,
+    0, 0, -1, -1, -2, -4, -3, -9, -4, -16,
+]
+    
+# Generate x values
+x = np.linspace(-5, 5, 100)
+
+# Define the functions
+y_parabola = -x**2
+y_line = x
+
+# Define forecast (future) region
+forecast_start = 3
+forecast_end = 5
+forecast_mask = (x >= forecast_start) & (x <= forecast_end)
+
+# Create the plot
+plt.figure(figsize=(10, 6))
+
+# Plot actual data
+plt.plot(x, y_parabola, label='Negative Parabola (-x²)', color='blue', linewidth=2)
+plt.plot(x, y_line, label='Positive Line (x)', color='green', linewidth=2)
+
+# Highlight forecast region
+plt.axvspan(forecast_start, forecast_end, color='pink', alpha=0.6, label='Forecast Area')
+
+metric = np.array(data[::2])
+trend = np.array(data[1::2])
+
+# Linear regression fit
+coeffs = np.polyfit(metric, trend, 1)
+reg_x = np.linspace(metric.min(), metric.max(), 200)
+reg_y = np.polyval(coeffs, reg_x)
+
+# Cone-shaped pink area: widens as x increases
+# We'll use a factor proportional to (reg_x - reg_x.min())
+factor = (y_parabola - y_line.min()) / (y_parabola.max() - y_line.min())
+base_std = np.std(trend)
+cone_width = base_std * (1 + 2 * factor)  # Widens to 3x at the right end
+
+plt.figure(figsize=(11,7))
+
+# Pink cone-shaped region
+plt.fill_between(y_parabola, y_line - cone_width, y_line + cone_width, color='pink', alpha=0.4, label='Trend Cone')
+
+# Optionally, plot the forecasted portions for both curves
+plt.plot(x[forecast_mask], y_parabola[forecast_mask], color='blue', linestyle='--', linewidth=2)
+plt.plot(x[forecast_mask], y_line[forecast_mask], color='green', linestyle='--', linewidth=2)
+
+# Titles and labels
+plt.title('Early Intervention')
+plt.xlabel('X Value')
+plt.ylabel('Y Value')
+plt.legend()
+plt.grid(True)
+plt.subplots()
+
+plt.show()
