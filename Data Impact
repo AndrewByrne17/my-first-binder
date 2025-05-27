@@ -1,0 +1,33 @@
+I need a pie chart with numbers 17, 47, 66, & 2 titled email replies. I also need a bar graph with numbers 85,70, & 15. I need to plot via matplotlib using python. I also need the lines on the graph colored differently. I will present the data. Please do not use scipy.
+
+import matplotlib.pyplot as plt
+
+# --- PIE CHART ---
+pie_values = [17, 47, 66, 2]
+pie_labels = ['A', 'B', 'C', 'D']  # You can change these labels if you want
+pie_colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728']
+
+plt.figure(figsize=(8, 4))
+plt.subplot(1, 2, 1)
+plt.pie(
+    pie_values,
+    labels=pie_labels,
+    autopct='%1.1f%%',
+    colors=pie_colors,
+    startangle=90
+)
+plt.title('Email Replies')
+
+# --- BAR GRAPH ---
+bar_values = [85, 70, 15]
+bar_labels = ['X', 'Y', 'Z']  # You can change these labels if you want
+bar_colors = ['#9467bd', '#8c564b', '#e377c2']
+
+plt.subplot(1, 2, 2)
+bars = plt.bar(bar_labels, bar_values, color=bar_colors)
+plt.title('Bar Graph')
+plt.ylabel('Value')
+plt.xlabel('Category')
+
+plt.tight_layout()
+plt.show()
