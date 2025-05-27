@@ -1,0 +1,51 @@
+Credit limit Frequency 1 69 100 1 200 1 500 1 1000 5 1500 36 2000 5 2500 0 3000 1 3500 2 4000 2 4500 1 5000 12 5500 0 6000 0 7000 1 8000 1 10000 4 12000 2 15000 5 20000 3 21000 1 25000 2 25000 2 35000 1 40000 1 45000 1 50000 2 55000 1 75000 1 80000 1 110000 2 110000 2 140000 1 150000 1 500000 1 I also need a bar graph with data above, titled Credit Limits. I need to plot via matplotlib using python, colored differently. I also need a line graph in the same graph of the amounts across the board. I will present the data. Please do not use scipy.
+
+import matplotlib.pyplot as plt
+import numpy as np
+from collections import Counter
+
+# Raw data
+credit_limits = [
+    1, 100, 200, 500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000,
+    5500, 6000, 7000, 8000, 10000, 12000, 15000, 20000, 21000, 25000, 25000,
+    35000, 40000, 45000, 50000, 55000, 75000, 80000, 110000, 110000, 140000, 150000, 500000
+]
+frequencies = [
+    69, 1, 1, 1, 5, 36, 5, 0, 1, 2, 2, 1, 12,
+    0, 0, 1, 1, 4, 2, 5, 3, 1, 2, 2,
+    1, 1, 1, 2, 1, 1, 1, 2, 2, 1, 1, 1
+]
+
+# Combine duplicate credit limits
+counter = Counter()
+for cl, freq in zip(credit_limits, frequencies):
+    counter[cl] += freq
+
+# Sort by credit limit
+sorted_items = sorted(counter.items())
+sorted_limits = [item[0] for item in sorted_items]
+sorted_freqs = [item[1] for item in sorted_items]
+
+# Generate different colors for each bar
+cmap = plt.get_cmap('tab20')
+bar_colors = [cmap(i % 20) for i in range(len(sorted_limits))]
+
+plt.figure(figsize=(16, 6))
+
+# Bar graph
+bars = plt.bar(sorted_limits, sorted_freqs, color=bar_colors, label='Frequency (Bar)')
+
+# Line graph
+plt.plot(sorted_limits, sorted_freqs, color='black', marker='o', linewidth=2, label='Frequency (Line)')
+
+plt.title('Credit Limits')
+plt.xlabel('Credit Limit')
+plt.ylabel('Frequency')
+plt.legend()
+plt.grid(axis='y', linestyle='--', alpha=0.7)
+
+# Optional: Format x-axis for better readability (rotate labels if many)
+plt.xticks(rotation=45, ha='right')
+
+plt.tight_layout()
+plt.show()
